@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './FlashCard.css';
 
-const FlashCard = ({ card, onFlip }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
+const FlashCard = ({ card, onFlip, isFlipped = false }) => {
+  const [internalFlipped, setInternalFlipped] = useState(false);
+
+  // Reset internal state when card changes
+  useEffect(() => {
+    setInternalFlipped(false);
+  }, [card.id]);
 
   const handleClick = () => {
-    setIsFlipped(!isFlipped);
+    const newFlipped = !internalFlipped;
+    setInternalFlipped(newFlipped);
     if (onFlip) {
-      onFlip(!isFlipped);
+      onFlip(newFlipped);
     }
   };
 
   return (
     <div 
-      className={`flashcard ${isFlipped ? 'flipped' : ''}`}
+      className={`flashcard ${internalFlipped ? 'flipped' : ''}`}
       onClick={handleClick}
     >
       <div className="flashcard-inner">
